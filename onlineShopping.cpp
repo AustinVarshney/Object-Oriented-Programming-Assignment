@@ -110,8 +110,9 @@ int main() {
             cout << "Enter Quantity: ";
             cin >> quantity;
 
-            if (productId > 0 && productId <= products.size() && quantity <= products[productId - 1].stock) {
+            if (productId > 0 && productId <= products.size() && quantity <= products[productId - 1].stock && quantity != 0) {
                 customer.addToCart(products[productId - 1], quantity);
+                products[productId - 1].stock -= quantity;
                 cout << "Added to cart!\n";
             } else {
                 cout << "Invalid product ID or insufficient stock.\n";

@@ -5,11 +5,10 @@ using namespace std;
 
 class User
 {
-protected:
+public:
     int userId;
     string name, email, password, address, phone, userType;
 
-public:
     User(int uid, string n, string em, string pw, string addr, string ph, string type)
         : userId(uid), name(n), email(em), password(pw), address(addr), phone(ph), userType(type) {}
 
@@ -62,13 +61,12 @@ public:
 
 class Product
 {
-private:
+public:
     int productId, stock;
     double price;
     string name, description, category;
     int sellerId;
 
-public:
     Product(int pid, string n, string desc, double pr, int st, string cat, int sid)
         : productId(pid), name(n), description(desc), price(pr), stock(st), category(cat), sellerId(sid) {}
 
@@ -131,8 +129,9 @@ public:
     void displayOrder()
     {
         cout << "Order ID: " << orderId << "\nStatus: " << status << "\nTotal Amount: $" << totalAmount << endl;
-        for (const auto &item : items)
+        for (const auto &item : items){
             item.displayOrderItem();
+        }
     }
 };
 
@@ -148,37 +147,37 @@ public:
 
     void displayReview()
     {
-        int main()
-        {
-            // Create some users
-            Customer customer1(1, "John Doe", "john@example.com", "password123", "123 Main St", "123-456-7890");
-            Seller seller1(2, "Alice Smith", "alice@example.com", "pass456", "456 Market St", "098-765-4321");
-            Admin admin1(3, "Admin User", "admin@example.com", "adminpass", "Admin St", "112-233-4455");
-
-            // Display user info and dashboard
-            customer1.displayUserInfo();
-            customer1.viewDashboard();
-
-            // Create a product
-            Product product1(101, "Laptop", "High-performance laptop", 999.99, 10, "Electronics", seller1.userId);
-            product1.displayProduct();
-
-            // Create an order and add items
-            Order order1(1001, customer1.userId);
-            OrderItem item1(101, 2, 999.99);
-            order1.addItem(item1);
-            order1.calculateTotal();
-            order1.updateStatus("Shipped");
-            order1.displayOrder();
-
-            // Add a review
-            Review review1(201, product1.productId, customer1.userId, 5, "Excellent product!");
-            review1.displayReview();
-
-            return 0;
-        }
-
-        cout << "Review ID: " << reviewId << "\nProduct ID: " << productId << "\nRating: "
-             << rating << "\nComment: " << comment << endl;
+        cout << "Review ID: " << reviewId << "\nProduct ID: " << productId
+             << "\nRating: " << rating << "\nComment: " << comment << endl;
     }
 };
+
+int main()
+{
+    // Create some users
+    Customer customer1(1, "John Doe", "john@example.com", "password123", "123 Main St", "123-456-7890");
+    Seller seller1(2, "Alice Smith", "alice@example.com", "pass456", "456 Market St", "098-765-4321");
+    Admin admin1(3, "Admin User", "admin@example.com", "adminpass", "Admin St", "112-233-4455");
+
+    // Display user info and dashboard
+    customer1.displayUserInfo();
+    customer1.viewDashboard();
+
+    // Create a product
+    Product product1(101, "Laptop", "High-performance laptop", 999.99, 10, "Electronics", seller1.userId);
+    product1.displayProduct();
+
+    // Create an order and add items
+    Order order1(1001, customer1.userId);
+    OrderItem item1(101, 2, 999.99);
+    order1.addItem(item1);
+    order1.calculateTotal();
+    order1.updateStatus("Shipped");
+    order1.displayOrder();
+
+    // Add a review
+    Review review1(201, product1.productId, customer1.userId, 5, "Excellent product!");
+    review1.displayReview();
+
+    return 0;
+}
