@@ -23,13 +23,7 @@ protected:
 
 public:
     vector<int> pIds;
-//   Doctor(int doctor_id, string name, string specialization, ViewDoctors &view)
     Doctor(int dId, string name, string specialization) : dId(dId), name(name), specialization(specialization){};
-
-//   void addPatient(int patientId)
-//   {
-//     patient_id.push_back(patientId);
-//   }
 
     int getId(){ return dId;}
     string getName(){return name;}
@@ -37,27 +31,13 @@ public:
     vector<int> getPatientsId(){return pIds;}
 };
 
-// class Doctor{
-//     int dId;
-//     string name, specialization;
-// public:
-//     vector<int> pIds;
-
-//     Doctor(int dId, string name, string specialization) : dId(dId), name(name), specialization(specialization){};
-
-//     Doctor(int dId, string name, string specialization, int pId) : dId(dId), name(name), specialization(specialization){
-//         pIds.emplace_back(pId);
-//     };
-
-    // int getId(){ return dId;}
-    // string getName(){return name;}
-    // string getSpecialization(){return specialization;}
-    // vector<int> getPatientsId(){return pIds;}
-// };
-
 class Management{
 public:
     void viewPatients(vector<Patient>& patients){
+        if(patients.size() == 0){
+            cout<<"No patient registered!"<<endl;
+            return;
+        }
         cout<<"Patients Lists:\n";
         cout<<setw(5)<<"pID"<<setw(15)<<"Name"<<setw(5)<<"Age"<<"  "<<"Symptoms"<<endl;
         for(auto &patient : patients){
@@ -66,6 +46,10 @@ public:
     }
 
     void viewDoctors(vector<Doctor>& doctors){
+        if(doctors.size() == 0){
+            cout<<"No Doctor is available!"<<endl;
+            return;
+        }
         cout<<"Doctors List:\n";
         cout<<setw(5)<<"dID"<<"   "<<"Name"<<"   "<<"Specialization"<<"   "<<"PatientIds"<<endl;
         for(auto &doctor : doctors){
@@ -132,16 +116,11 @@ public:
 
 int main(){
     vector<Patient> patients = {
-        Patient(1, "Rahul", 20, "Fewer"),
-        Patient(2, "Ramesh", 56, "Diabetes"),
-        Patient(3, "Ajay", 70, "Apetite")
+        // Patient(1, "Rahul", 20, "Fewer"),
     };
 
     vector<Doctor> doctors = {
-        Doctor(1,"Mukesh Gupta", "Pharmacy"),
-        Doctor(2,"Mahesh Sharma", "Biomecs"),
-        Doctor(3,"Sidhart", "Surgery"),
-        Doctor(4,"Ajay raj", "Liver")
+        // Doctor(1,"Mukesh Gupta", "Pharmacy"),
     };
 
 
