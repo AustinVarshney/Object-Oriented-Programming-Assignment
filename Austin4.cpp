@@ -130,33 +130,33 @@ public:
     cout<<"Patients Lists:\n";
     cout<<setw(5)<<"pID"<<setw(15)<<"Name"<<setw(5)<<"Age"<<"  "<<"Symptoms"<<endl;
     for (auto &patient : patients){
-      cout<<setw(5)<<patient.getId()<<setw(15)<<patient.getName()<<setw(5)<<patient.getAge()<<"  "<<patient.getSymp()<<endl;
+      cout<<patient.getId()<<setw(12)<<patient.getName()<<setw(7)<<patient.getAge()<<setw(10)<<patient.getSymp()<<endl;
     }
   }
 
   void viewDoctors(vector<Doctor> &doctors)
   {
     cout<<"Doctors List:\n";
-    cout<<setw(5)<<"dID"<<"   "<<"Name"<<"   "<<"Specialization"<<"   "<<"PatientIds"<<endl;
+    cout<<"dID"<<" "<<setw(8)<<"Name"<<" "<<setw(18)<<"Specialization"<<endl;
     for (auto &doctor : doctors){
-      cout<<setw(5)<<doctor.getId()<<"   "<<doctor.getName()<<"   "<<doctor.getSpecialization()<<"   ";
+      cout<<doctor.getId()<<setw(10)<<doctor.getName()<<setw(10)<<doctor.getSpecialization()<<"   ";
       cout<<endl;
     }
   }
   void viewBill(vector<Bill> &bills){
     cout<<"Bill List:\n";
-    cout<<setw(5)<<"bID"<<"   "<<"pID"<<"   "<<"Name"<<"   "<<"Amount"<<"   "<<"Status"<<endl;
+    cout<<"bID"<<setw(5)<<"pID"<<setw(10)<<"Name"<<setw(15)<<"Amount"<<setw(10)<<"Status"<<endl;
     for (auto &itr : bills)
     {
-      cout<<setw(5)<<itr.getId()<<"   "<<itr.getpId()<<"   "<<itr.getName()<<"   "<<itr.getAmount()<<"   "<<itr.getStatus()<<"   "<<endl;
+      cout<<itr.getId()<<setw(5)<<itr.getpId()<<setw(15)<<itr.getName()<<setw(9)<<itr.getAmount()<<setw(12)<<itr.getStatus()<<endl;
     }
   }
   void viewAppointment(vector<Appointment> &appointments){
     cout<<"Appointment List:\n";
-    cout<<setw(5)<<"aID"<<"   "<<"pID"<<"   "<<"Patient Name"<<"   "<<"dID"<<"   "<<"DoctorName"<<"   "<<"Date"<<"    "<<"Time "<<endl;
+    cout<<"aID"<<setw(5)<<"pID"<<setw(18)<<"Patient_Name"<<setw(7)<<"dID"<<setw(15)<<"DoctorName"<<setw(8)<<"Date"<<setw(11)<<"Time "<<endl;
     for (auto &appointment : appointments)
     {
-      cout<<setw(5)<<appointment.getId()<<"   "<<appointment.getpId()<<"   "<<appointment.getPatientName()<<"   "<<appointment.getdId()<<"   "<<appointment.getDoctorName()<<"   "<<appointment.getDate()<<"   "<<appointment.getTime()<<endl;
+      cout<<appointment.getId()<<setw(5)<<appointment.getpId()<<setw(15)<<appointment.getPatientName()<<setw(10)<<appointment.getdId()<<setw(10)<<appointment.getDoctorName()<<setw(13)<<appointment.getDate()<<setw(10)<<appointment.getTime()<<endl;
     };
   };
 
@@ -271,38 +271,11 @@ public:
       return;
     }
 
-    // bool patientFound = false;
-    // bool doctorFound = false;
-
-    // for (auto &patient : patients){
-    //   if (pId == patient.getId()){
-    //     patientFound = true;
-    //     break;
-    //   }
-    // }
-
-    // for (auto &doctor : doctors){
-    //   if (dId == doctor.getId()){
-    //     doctorFound = true;
-
-    //     doctor.pIds.push_back(pId);
-    //     break;
-    //   }
-    // }
-
     appointments.emplace_back(aId++, dId, pId, date, time, patients, doctors);
     cout<<"Appointment is added successfully!\n";
     return;
-
-    // if (patientFound && doctorFound){
-    //   aId += 1;
-    //   appointments.emplace_back(aId, dId, pId, date, time, patients, doctors);
-    //   cout<<"Appointment has been added!\n";
-    // }
-    // else{
-    //   cout<<"Appointment creation failed. Please check patient and doctor IDs.\n";
-    // }
   }
+
   void viewPrescriptions(vector<Patient> &patients, vector<Doctor> &doctors, vector<Prescription> &prescriptions){
     if (prescriptions.size() == 0){
       cout<<"No prescriptions are available!"<<endl;
@@ -328,7 +301,7 @@ public:
       }
 
       // Printing each prescriptions
-      cout<<setw(14)<<prescription.getId()<<setw(15)<<docName<<setw(15)<<patName<<" - Prescription --> "<<prescription.getPrescription()<<endl;
+      cout<<setw(4)<<prescription.getId()<<setw(15)<<docName<<setw(15)<<patName<<" - Prescription --> "<<prescription.getPrescription()<<endl;
     }
   }
 
@@ -392,6 +365,14 @@ int main(){
     cout<<"--------------------"<<endl;
     cout<<"Enter your choice : ";
     cin >> choice;
+
+    if (cin.fail())
+        {
+            cout<<"Invalid input. Please enter a number between 1 and 11.\n";
+            cin.clear();               // Clear the invalid input
+            cin.ignore(INT8_MAX, '\n'); // It ignore the invalid input in the cin
+            continue;                  // Restart the loop
+    }
 
     switch (choice){
     case 1:
