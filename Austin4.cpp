@@ -4,14 +4,14 @@
 #include <iomanip>
 using namespace std;
 
-class Patient
-{
+class Patient{
 protected:
   int pId, age;
   string name, symptoms;
 
 public:
-  Patient(int pId, string name, int age, string symptoms) : pId(pId), age(age), name(name), symptoms(symptoms) {};
+    Patient(int pId):pId(pId){};
+    Patient(int pId, string name, int age, string symptoms) : pId(pId), age(age), name(name), symptoms(symptoms) {};
 
   int getId() { return pId; }
   string getName() { return name; }
@@ -19,30 +19,27 @@ public:
   string getSymp() { return symptoms; }
 };
 
-class Doctor
-{
+class Doctor{
 protected:
   int dId;
   string name, specialization;
 
 public:
-  vector<int> pIds;
-
-  Doctor(int dId, string name, string specialization) : dId(dId), name(name), specialization(specialization) {};
+    Doctor(int dId) : dId(dId){};
+    Doctor(int dId, string name, string specialization) : dId(dId), name(name), specialization(specialization) {};
 
   int getId() { return dId; }
   string getName() { return name; }
   string getSpecialization() { return specialization; }
-  vector<int> getPatientsId() { return pIds; }
 };
 
-class Appointment{
-  int aId, pId, dId, date, time;
+class Appointment : protected Patient, protected Doctor{
+  int aId, date, time;
   vector<Patient> &patients;
   vector<Doctor> &doctors;
 
 public:
-  Appointment(int aId, int dId, int pId, int date, int time, vector<Patient> &patients, vector<Doctor> &doctors) : aId(aId), dId(dId), pId(pId), date(date), time(time), patients(patients), doctors(doctors) {};
+  Appointment(int aId, int dId, int pId, int date, int time, vector<Patient> &patients, vector<Doctor> &doctors) : aId(aId), date(date), time(time), patients(patients),  doctors(doctors), Doctor(dId), Patient(pId){};
   int getId() { return aId; }
   int getpId() { return pId; }
   int getdId() { return dId; }
@@ -80,8 +77,7 @@ public:
   int getpId() { return pId; }
   int getAmount() { return amount; }
   string getStatus() { return status; }
-  string getName()
-  {
+  string getName(){
 
     for (auto &itr : patients)
     {
@@ -144,8 +140,6 @@ public:
     cout<<setw(5)<<"dID"<<"   "<<"Name"<<"   "<<"Specialization"<<"   "<<"PatientIds"<<endl;
     for (auto &doctor : doctors){
       cout<<setw(5)<<doctor.getId()<<"   "<<doctor.getName()<<"   "<<doctor.getSpecialization()<<"   ";
-      for (auto &pId : doctor.pIds){
-        cout<<pId<<",";}
       cout<<endl;
     }
   }
@@ -157,12 +151,12 @@ public:
       cout<<setw(5)<<itr.getId()<<"   "<<itr.getpId()<<"   "<<itr.getName()<<"   "<<itr.getAmount()<<"   "<<itr.getStatus()<<"   "<<endl;
     }
   }
-  void viewAppointment(vector<Appointment> &appointment){
+  void viewAppointment(vector<Appointment> &appointments){
     cout<<"Appointment List:\n";
     cout<<setw(5)<<"aID"<<"   "<<"pID"<<"   "<<"Patient Name"<<"   "<<"dID"<<"   "<<"DoctorName"<<"   "<<"Date"<<"    "<<"Time "<<endl;
-    for (auto &itr : appointment)
+    for (auto &appointment : appointments)
     {
-      cout<<setw(5)<<itr.getId()<<"   "<<itr.getpId()<<"   "<<itr.getPatientName()<<"   "<<itr.getdId()<<"   "<<itr.getDoctorName()<<"   "<<itr.getDate()<<"   "<<itr.getTime()<<endl;
+      cout<<setw(5)<<appointment.getId()<<"   "<<appointment.getpId()<<"   "<<appointment.getPatientName()<<"   "<<appointment.getdId()<<"   "<<appointment.getDoctorName()<<"   "<<appointment.getDate()<<"   "<<appointment.getTime()<<endl;
     };
   };
 
@@ -222,7 +216,7 @@ public:
   }
 
   int addBill(vector<Bill> &bills, vector<Patient> &patients){
-    static int bId = 0;
+    static int bId = 1;
     int amount;
     string status;
     int pId;
@@ -256,7 +250,7 @@ public:
   }
 
   void addAppointment(vector<Appointment> &appointments, vector<Patient> &patients, vector<Doctor> &doctors){
-    static int aId = 0;
+    static int aId = 1;
     int pId, dId, date, time;
     cout<<"Enter Patient ID : ";
     cin >> pId;
@@ -267,33 +261,47 @@ public:
     cout<<"Enter Time : ";
     cin >> time;
 
-    bool patientFound = false;
-    bool doctorFound = false;
-
-    for (auto &itr : patients){
-      if (pId == itr.getId()){
-        patientFound = true;
-        break;
-      }
+    //If any Id out of dId and pId not exists, then we write the statement of being Id invalid.
+    if (!checkDoctorId(doctors, dId)){
+      cout<<"Doctor Id is invalid. Please check again!";
+      return;
+    }
+    else if (!checkPatientId(patients, pId)){
+      cout<<"Patient Id is invalid. Please check again!";
+      return;
     }
 
-    for (auto &itr : doctors){
-      if (dId == itr.getId()){
-        doctorFound = true;
+    // bool patientFound = false;
+    // bool doctorFound = false;
 
-        itr.pIds.push_back(pId);
-        break;
-      }
-    }
+    // for (auto &patient : patients){
+    //   if (pId == patient.getId()){
+    //     patientFound = true;
+    //     break;
+    //   }
+    // }
 
-    if (patientFound && doctorFound){
-      aId += 1;
-      appointments.emplace_back(aId, dId, pId, date, time, patients, doctors);
-      cout<<"Appointment has been added!\n";
-    }
-    else{
-      cout<<"Appointment creation failed. Please check patient and doctor IDs.\n";
-    }
+    // for (auto &doctor : doctors){
+    //   if (dId == doctor.getId()){
+    //     doctorFound = true;
+
+    //     doctor.pIds.push_back(pId);
+    //     break;
+    //   }
+    // }
+
+    appointments.emplace_back(aId++, dId, pId, date, time, patients, doctors);
+    cout<<"Appointment is added successfully!\n";
+    return;
+
+    // if (patientFound && doctorFound){
+    //   aId += 1;
+    //   appointments.emplace_back(aId, dId, pId, date, time, patients, doctors);
+    //   cout<<"Appointment has been added!\n";
+    // }
+    // else{
+    //   cout<<"Appointment creation failed. Please check patient and doctor IDs.\n";
+    // }
   }
   void viewPrescriptions(vector<Patient> &patients, vector<Doctor> &doctors, vector<Prescription> &prescriptions){
     if (prescriptions.size() == 0){
@@ -354,9 +362,9 @@ public:
 };
 
 int main(){
-  vector<Patient> patients;
-  vector<Doctor> doctors;
-  vector<Bill> bills;
+  vector<Patient> patients = {{1,"Ambani",36,"Weight loss"}};
+  vector<Doctor> doctors = {{1,"Mukesh", "MBBS"}};
+  vector<Bill> bills = {{1,1,200,"Paid",patients}};
   vector<Appointment> appointment;
   vector<Prescription> prescriptions;
 
