@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <climits>
 using namespace std;
 
 class Patient
@@ -11,16 +12,7 @@ protected:
     string name, symptoms;
 
 public:
-    Patient() {};
-
     Patient(int pId, string name, int age, string symptoms) : pId(pId), age(age), name(name), symptoms(symptoms) {};
-
-    void patientInfo()
-    {
-        cout<<"Patient Name : "<<name<<endl;
-        cout<<"Age : "<<age<<endl;
-        cout<<"Symptoms : "<<symptoms<<endl;
-    }
 
     int getId() { return pId; }
     string getName() { return name; }
@@ -36,17 +28,8 @@ protected:
 
 public:
     vector<int> pIds;
-    Doctor() {
-        // this->dId = dId;
-    };
 
     Doctor(int dId, string name, string specialization) : dId(dId), name(name), specialization(specialization) {};
-
-    void doctorInfo()
-    {
-        cout<<"Doctor Name : "<<name<<endl;
-        cout<<"Specialization : "<<specialization<<endl;
-    }
 
     int getId() { return dId; }
     string getName() { return name; }
@@ -56,116 +39,174 @@ public:
 
 class Appointment
 {
-protected:
-    int appointmentId, pId, dId;
+    int aId;
+    int pId;
+    int dId;
+    int date;
+    int time;
+    vector<Patient> &patients;
+    vector<Doctor> &doctors;
 
 public:
-    Appointment() {}
-    Appointment(int apptId, int pId, int dId) : appointmentId(apptId), pId(pId), dId(dId)
+    Appointment(int aId, int dId, int pId, int date, int time, vector<Patient> &patients, vector<Doctor> &doctors) : aId(aId), dId(dId), pId(pId), date(date), time(time), patients(patients), doctors(doctors) {};
+    int getId() { return aId; }
+    int getpId() { return pId; }
+    int getdId() { return dId; }
+    int getDate() { return date; }
+    int getTime() { return time; }
+    string getPatientName()
     {
-    }
 
-    void bookAppointment()
-    {
-        cout<<"Enter Appointment ID : ";
-        cin >> appointmentId;
-
-        cout<<"Enter Patient Id : ";
-        cin >> pId;
-
-        cout<<"Enter Doctor ID : ";
-        cin >> dId;
-    }
-
-    void displayAppointment(vector<Doctor> &doctors, vector<Patient> &patients)
-    {
-        cout<<"Appointment Id : "<<appointmentId<<endl;
-        cout<<"------x--------Doctor Details ------x------"<<endl;
-
-        for (auto &doctor : doctors)
+        for (auto &itr : patients)
         {
-            if (doctor.getId() == dId)
+            if (pId == itr.getId())
             {
-                doctor.doctorInfo();
+                return itr.getName();
             }
         }
+        return "unknown";
+    }
 
-        cout<<"------x--------Patient Details ------x------"<<endl;
-        for (auto &patient : patients)
+    string getDoctorName()
+    {
+
+        for (auto &itr : doctors)
         {
-            if (patient.getId() == pId)
+            if (dId == itr.getId())
             {
-                patient.patientInfo();
+                return itr.getName();
             }
         }
+        return "unknown";
     }
+};
 
-    int getDoctorId()
-    {
-        return dId;
-    }
+class Bill
+{
+    int bId;
+    int amount;
+    string status;
+    int pId;
+    vector<Patient> &patients;
 
-    int getPatientId()
+public:
+    Bill(int bId, int pId, int amount, string status, vector<Patient> &patients) : bId(bId), pId(pId), amount(amount), status(status), patients(patients) {};
+    int getId() { return bId; }
+    int getpId() { return pId; }
+    int getAmount() { return amount; }
+    string getStatus() { return status; }
+    string getName()
     {
-        return pId;
+
+        for (auto &itr : patients)
+        {
+            if (pId == itr.getId())
+            {
+                return itr.getName();
+            }
+        }
+        return "unknown";
     }
+};
+class Prescription
+{
+    int dId, pId, prId;
+    string prescription;
+
+public:
+    Prescription(int prId, int dId, int pId, std::string prescription) : prId(prId), dId(dId), pId(pId), prescription(prescription) {};
+
+    int getId() { return prId; }
+    int getDoctorId() { return dId; }
+    int getPatientId() { return pId; }
+    string getPrescription() { return prescription; }
+};
+
+bool checkDoctorId(vector<Doctor> &doctors, int id)
+{
+    bool check = false;
+    for (auto &doctor : doctors)
+    {
+        if (id == doctor.getId())
+        {
+            check = true;
+            break;
+        }
+    }
+    return check;
+};
+bool checkPatientId(vector<Patient> &patients, int id)
+{
+    bool check = false;
+    for (auto &patient : patients)
+    {
+        if (id == patient.getId())
+        {
+            check = true;
+            break;
+        }
+    }
+    return check;
 };
 
 class Management
 {
-    vector<Doctor> doctors;
-    vector<Patient> patients;
-    vector<Appointment> appointment;
-
 public:
-    void viewPatients()
+    void viewPatients(vector<Patient> &patients)
     {
-        if (patients.size() == 0)
-        {
-            cout<<"No patient registered!"<<endl;
-            return;
-        }
-        cout<<"Patients Lists:\n";
-        cout<<setw(5)<<"pID"<<setw(15)<<"Name"<<setw(5)<<"Age"<<"  "<<"Symptoms"<<endl;
+        cout << "Patients Lists:\n";
+        cout << setw(5) << "pID" << setw(15) << "Name" << setw(5) << "Age" << "  " << "Symptoms" << endl;
         for (auto &patient : patients)
         {
-            cout<<setw(5)<<patient.getId()<<setw(15)<<patient.getName()<<setw(5)<<patient.getAge()<<"  "<<patient.getSymp()<<endl;
+            cout << setw(5) << patient.getId() << setw(15) << patient.getName() << setw(5) << patient.getAge() << "  " << patient.getSymp() << endl;
         }
     }
 
-    void viewDoctors()
+    void viewDoctors(vector<Doctor> &doctors)
     {
-        if (doctors.size() == 0)
-        {
-            cout<<"No Doctor is available!"<<endl;
-            return;
-        }
-        cout<<"Doctors List:\n";
-        cout<<setw(5)<<"dID"<<"   "<<"Name"<<"   "<<"Specialization"<<"   "<<"PatientIds"<<endl;
+        cout << "Doctors List:\n";
+        cout << setw(5) << "dID" << "   " << "Name" << "   " << "Specialization" << "   " << "PatientIds" << endl;
         for (auto &doctor : doctors)
         {
-            cout<<setw(5)<<doctor.getId()<<"   "<<doctor.getName()<<"   "<<doctor.getSpecialization()<<"   ";
+            cout << setw(5) << doctor.getId() << "   " << doctor.getName() << "   " << doctor.getSpecialization() << "   ";
             for (auto &pId : doctor.pIds)
             {
-                cout<<pId<<",";
+                cout << pId << ",";
             }
-            cout<<endl;
+            cout << endl;
         }
     }
-
-    int addPatient()
+    void viewBill(vector<Bill> &bills)
     {
-        int pId, age;
+        cout << "Bill List:\n";
+        cout << setw(5) << "bID" << "   " << "pID" << "   " << "Name" << "   " << "Amount" << "   " << "Status" << endl;
+        for (auto &itr : bills)
+        {
+            cout << setw(5) << itr.getId() << "   " << itr.getpId() << "   " << itr.getName() << "   " << itr.getAmount() << "   " << itr.getStatus() << "   " << endl;
+        }
+    }
+    void viewAppointment(vector<Appointment> &appointment)
+    {
+        cout << "Appointment List:\n";
+        cout << setw(5) << "aID" << "   " << "pID" << "   " << "Patient Name" << "   " << "dID" << "   " << "DoctorName" << "   " << "Date" << "    " << "Time " << endl;
+        for (auto &itr : appointment)
+        {
+            cout << setw(5) << itr.getId() << "   " << itr.getpId() << "   " << itr.getPatientName() << "   " << itr.getdId() << "   " << itr.getDoctorName() << "   " << itr.getDate() << "   " << itr.getTime() << endl;
+        };
+    };
+
+    int addPatient(vector<Patient> &patients)
+    {
+        static int pId = 1;
+        int age;
         string name, symptoms;
 
-        cout<<"Enter the Patient Id : ";
-        cin >> pId;
-        cout<<"Enter the Patient Name : ";
+        cout << "Enter the Patient Name : ";
         cin.ignore();
         getline(cin, name);
-        cout<<"Enter the age : ";
+        cout << "Enter the age : ";
         cin >> age;
-        cout<<"What are your symptoms ?\n";
+        cout << "What are your symptoms ?\n";
         cin.ignore();
         getline(cin, symptoms);
 
@@ -173,27 +214,28 @@ public:
         {
             if (pId == patient.getId())
             {
-                cout<<"Patient Id is already created! Please Enter a different Patient Id.\n";
+                pId += 1;
+                patients.emplace_back(pId, name, age, symptoms);
+                cout << "Patient is added successfully!\n";
+
                 return 0;
             }
         }
 
         patients.emplace_back(pId, name, age, symptoms);
-        cout<<"Patient is added successfully!\n";
+        cout << "Patient is added successfully!\n";
         return 0;
     }
 
-    int addDoctors()
+    int addDoctors(vector<Doctor> &doctors)
     {
-        int dId;
+        static int dId = 1;
         string name, specialization;
 
-        cout<<"Enter the Doctor Id : ";
-        cin >> dId;
-        cout<<"Enter the Doctor Name : ";
+        cout << "Enter the Doctor Name : ";
         cin.ignore();
         getline(cin, name);
-        cout<<"What are your Specialization ?\n";
+        cout << "What are your Specialization ?\n";
         cin.ignore();
         getline(cin, specialization);
 
@@ -201,120 +243,267 @@ public:
         {
             if (dId == doctor.getId())
             {
-                cout<<"Doctor Id is already created! Please Enter a different Doctor Id.\n";
+                dId += 1;
+                doctors.emplace_back(dId, name, specialization);
+                cout << "Doctor is added successfully!\n";
+
                 return 0;
             }
         }
 
         doctors.emplace_back(dId, name, specialization);
-        cout<<"Doctor is added successfully!\n";
+        cout << "Doctor is added successfully!\n";
         return 0;
     }
 
-    void addAppointment()
+    int addBill(vector<Bill> &bills, vector<Patient> &patients)
     {
-        Appointment appt;
+        static int bId = 0;
+        int amount;
+        string status;
+        int pId;
+        cout << "Enter the patient's id : ";
+        cin >> pId;
+        cout << "enter the amount value : \n";
+        cin >> amount;
+        cout << "Enter the status : \n";
+        cin.ignore();
+        getline(cin, status);
+        bool patientFound = false;
 
-        // Take All Values to book the appointment
-        appt.bookAppointment();
-
-        Patient *patient = nullptr;
-        Doctor *doctor = nullptr;
-
-        // check for Particular doctor,  He/She is available in the Hospital.
-        for (auto &d : doctors)
+        for (auto &itr : patients)
         {
-            if (appt.getDoctorId() == d.getId())
+            if (pId == itr.getId())
             {
-                doctor = &d;
+
+                patientFound = true;
                 break;
             }
         }
 
-        // check for Particular Patient,  He/She books an appointment in the Hospital.
-        for (auto &p : patients)
+        if (patientFound)
         {
-            if (appt.getPatientId() == p.getId())
-            {
-                patient = &p;
-                break;
-            }
-        }
 
-        // check for Both Patient and Doctor there
-        if (patient && doctor)
-        {
-            appointment.push_back(appt);
-            cout<<"Appointment Scheduled Successfully"<<endl;
+            bId += 1;
+            bills.emplace_back(bId, pId, amount, status, patients);
+            cout << "Bill is added successfully!\n";
         }
         else
         {
-            if (!doctor)
-                cout<<"Appointment Failed! Doctor not registered in Hospital."<<endl;
-            if (!patient)
-                cout<<"Appointment Failed! Patient does not exist."<<endl;
+            cout << "No patient found with this ID!\n";
+        }
+
+        return 0;
+    }
+    void addAppointment(vector<Appointment> &appointments, vector<Patient> &patients, vector<Doctor> &doctors)
+    {
+        static int aId = 0;
+        int pId, dId, date, time;
+        cout << "Enter Patient ID : ";
+        cin >> pId;
+        cout << "Enter Doctor ID : ";
+        cin >> dId;
+        cout << "Enter Date : ";
+        cin >> date;
+        cout << "Enter Time : ";
+        cin >> time;
+
+        bool patientFound = false;
+        bool doctorFound = false;
+
+        for (auto &itr : patients)
+        {
+            if (pId == itr.getId())
+            {
+                patientFound = true;
+                break;
+            }
+        }
+
+        for (auto &itr : doctors)
+        {
+            if (dId == itr.getId())
+            {
+                doctorFound = true;
+
+                itr.pIds.push_back(pId);
+                break;
+            }
+        }
+
+        if (patientFound && doctorFound)
+        {
+            aId += 1;
+            appointments.emplace_back(aId, dId, pId, date, time, patients, doctors);
+            cout << "Appointment has been added!\n";
+        }
+        else
+        {
+            cout << "Appointment creation failed. Please check patient and doctor IDs.\n";
+        }
+    }
+    void viewPrescriptions(vector<Patient> &patients, vector<Doctor> &doctors, vector<Prescription> &prescriptions)
+    {
+        if (prescriptions.size() == 0)
+        {
+            cout << "No prescriptions are available!" << endl;
+            return;
+        }
+
+        cout << "Prescriptions List : \n";
+        cout << setw(4) << "prescriptionId" << setw(15) << "Doctor Name" << setw(15) << "Patient Name\n";
+        for (auto &prescription : prescriptions)
+        {
+            // For finding the Doctor and Patient Name
+            string docName = "null", patName = "null";
+            for (auto &doctor : doctors)
+            {
+                int docId = doctor.getId();
+                if (prescription.getDoctorId() == docId)
+                {
+                    docName = doctor.getName();
+                }
+            }
+            for (auto &patient : patients)
+            {
+                int patId = patient.getId();
+                if (prescription.getPatientId() == patId)
+                {
+                    patName = patient.getName();
+                }
+            }
+
+            // Printing each prescriptions
+            cout << setw(14) << prescription.getId() << setw(15) << docName << setw(15) << patName << " - Prescription --> " << prescription.getPrescription() << endl;
         }
     }
 
-    void viewAppointments()
+    void addPrescription(vector<Patient> &patients, vector<Doctor> &doctors, vector<Prescription> &prescriptions)
     {
-        if (appointment.empty())
+        static int prId = 1;
+        int dId, pId;
+        // int prId, dId, pId;
+        string prescription;
+        cout << "Enter the Doctor Id : ";
+        cin >> dId;
+        cout << "Enter the Patient Id : ";
+        cin >> pId;
+        cout << "Enter the Prescription : ";
+        cin.ignore();
+        getline(cin, prescription);
+
+        // If any Id out of dId and pId not exists, then we write the statement of being Id invalid.
+        if (!checkDoctorId(doctors, dId))
         {
-            cout<<"No appointments scheduled!"<<endl;
+            cout << "Doctor Id is invalid. Please check again!";
             return;
         }
-        for (auto &appt : appointment)
+        else if (!checkPatientId(patients, pId))
         {
-            appt.displayAppointment(doctors, patients);
-            cout<<"==================================================="<<endl;
+            cout << "Patient Id is invalid. Please check again!";
+            return;
         }
+
+        prescriptions.emplace_back(prId++, dId, pId, prescription);
+        cout << "Prescription is added successfully!\n";
+        return;
     }
 };
 
 int main()
 {
+    vector<Patient> patients;
+    vector<Doctor> doctors;
+    vector<Bill> bills;
+    vector<Appointment> appointment;
+    vector<Prescription> prescriptions;
+
     Management system;
+
     int choice;
+    string ch;
     do
     {
-        cout<<"1. View Patients\n2. Add Patients\n3. View Doctors\n4. Add Doctors\n5. Add Appointment\n6. View Appointments\n7. Exit\n";
-        cout<<"Enter a Number : ";
+        cout << "--------------------" << endl;
+        cout << "1. View Patients\n";
+        cout << "2. Add Patients\n";
+        cout << "--------------------" << endl;
+        cout << "3. View Doctors\n";
+        cout << "4. Add Doctors\n";
+        cout << "--------------------" << endl;
+        cout << "5. View Bill\n";
+        cout << "6. Add Bill\n";
+        cout << "--------------------" << endl;
+        cout << "7. View Appointment\n";
+        cout << "8. Add Appointment\n";
+        cout << "--------------------" << endl;
+        cout << "9. View Prescription\n";
+        cout << "10. Add Prescription\n";
+        cout << "--------------------" << endl;
+        cout << "11. Exit\n";
+        cout << "--------------------" << endl;
+        cout << "Enter a Number : ";
         cin >> choice;
+
+        if (cin.fail())
+        {
+            cout << "Invalid input. Please enter a number between 1 and 11.\n";
+            cin.clear();               // Clear the invalid input
+            cin.ignore(INT_MAX, '\n'); // It ignore the invalid input in the cin
+            continue;                  // Restart the loop
+        }
 
         switch (choice)
         {
         case 1:
-            system.viewPatients();
-            cout<<"===============================================================\n";
+            system.viewPatients(patients);
+            cout << "===============================================================\n";
             break;
         case 2:
-            system.addPatient();
-            cout<<"===============================================================\n";
+            system.addPatient(patients);
+            cout << "===============================================================\n";
             break;
         case 3:
-            system.viewDoctors();
-            cout<<"===============================================================\n";
+            system.viewDoctors(doctors);
+            cout << "===============================================================\n";
             break;
         case 4:
-            system.addDoctors();
-            cout<<"===============================================================\n";
+            system.addDoctors(doctors);
+            cout << "===============================================================\n";
             break;
         case 5:
-            system.addAppointment();
-            cout<<"===============================================================\n";
+            system.viewBill(bills);
+            cout << "===============================================================\n";
             break;
         case 6:
-            system.viewAppointments();
-            cout<<"===============================================================\n";
+            system.addBill(bills, patients);
+            cout << "===============================================================\n";
             break;
         case 7:
-            cout<<"-------------- Thank You for the visit --------------\n";
+            system.viewAppointment(appointment);
+            cout << "===============================================================\n";
             break;
+        case 8:
+            system.addAppointment(appointment, patients, doctors);
+            cout << "===============================================================\n";
+            break;
+        case 9:
+            system.viewPrescriptions(patients, doctors, prescriptions);
+            cout << "===============================================================\n";
+            break;
+        case 10:
+            system.addPrescription(patients, doctors, prescriptions);
+            cout << "===============================================================\n";
+            break;
+        case 11:
+            cout << "-------------- Thank You for the visit --------------";
+            break;
+
         default:
-            cout<<"Invalid Number\n";
-            cout<<"---------TRY AGAIN---------\n";
-            cout<<"===============================================================\n";
+            cout << "Invalid Number\n";
+            cout << "---------TRY AGAIN---------\n";
+            cout << "===============================================================\n";
         }
-    } while (choice != 7);
+    } while (choice != 11);
     return 0;
 }
