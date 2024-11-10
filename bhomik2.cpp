@@ -69,35 +69,35 @@ class Management
 public:
   void viewPatients(vector<Patient> &patients)
   {
-    cout << "Patients Lists:\n";
-    cout << setw(5) << "pID" << setw(15) << "Name" << setw(5) << "Age" << "  " << "Symptoms" << endl;
+    cout<<"Patients Lists:\n";
+    cout<<setw(5)<<"pID"<<setw(15)<<"Name"<<setw(5)<<"Age"<<"  "<<"Symptoms"<<endl;
     for (auto &patient : patients)
     {
-      cout << setw(5) << patient.getId() << setw(15) << patient.getName() << setw(5) << patient.getAge() << "  " << patient.getSymp() << endl;
+      cout<<setw(5)<<patient.getId()<<setw(15)<<patient.getName()<<setw(5)<<patient.getAge()<<"  "<<patient.getSymp()<<endl;
     }
   }
 
   void viewDoctors(vector<Doctor> &doctors)
   {
-    cout << "Doctors List:\n";
-    cout << setw(5) << "dID" << "   " << "Name" << "   " << "Specialization" << "   " << "PatientIds" << endl;
+    cout<<"Doctors List:\n";
+    cout<<setw(5)<<"dID"<<"   "<<"Name"<<"   "<<"Specialization"<<"   "<<"PatientIds"<<endl;
     for (auto &doctor : doctors)
     {
-      cout << setw(5) << doctor.getId() << "   " << doctor.getName() << "   " << doctor.getSpecialization() << "   ";
+      cout<<setw(5)<<doctor.getId()<<"   "<<doctor.getName()<<"   "<<doctor.getSpecialization()<<"   ";
       for (auto &pId : doctor.pIds)
       {
-        cout << pId << ",";
+        cout<<pId<<",";
       }
-      cout << endl;
+      cout<<endl;
     }
   }
   void viewBill(vector<Bill> &bills)
   {
-    cout << "Bill List:\n";
-    cout << setw(5) << "bID" << "   " << "pID" << "   " << "Name" << "   " << "Amount" << "   " << "Status" << endl;
-    for (auto &itr : bills)
+    cout<<"Bill List:\n";
+    cout <<setw(5)<<"bID"<<"   "<<"pID"<<"   "<<"Name"<<"   "<<"Amount"<<"   "<<"Status"<<endl;
+    for (auto &bill : bills)
     {
-      cout << setw(5) << itr.getId() << "   " << itr.getpId() << "   " << itr.getName() << "   " << itr.getAmount() << "   " << itr.getStatus() << "   " << endl;
+      cout<<setw(5)<<bill.getId()<<"   "<<bill.getpId()<<"   "<<bill.getName()<<"   "<<bill.getAmount()<<"   "<<bill.getStatus()<<"   "<<endl;
     }
   }
 
@@ -107,12 +107,12 @@ public:
     int age;
     string name, symptoms;
 
-    cout << "Enter the Patient Name : ";
+    cout<<"Enter the Patient Name : ";
     cin.ignore();
     getline(cin, name);
-    cout << "Enter the age : ";
+    cout<<"Enter the age : ";
     cin >> age;
-    cout << "What are your symptoms ?\n";
+    cout<<"What are your symptoms ?\n";
     cin.ignore();
     getline(cin, symptoms);
 
@@ -122,14 +122,14 @@ public:
       {
         pId += 1;
         patients.emplace_back(pId, name, age, symptoms);
-        cout << "Patient is added successfully!\n";
+        cout<<"Patient is added successfully!\n";
 
         return 0;
       }
     }
 
     patients.emplace_back(pId, name, age, symptoms);
-    cout << "Patient is added successfully!\n";
+    cout<<"Patient is added successfully!\n";
     return 0;
   }
 
@@ -138,10 +138,10 @@ public:
     static int dId = 1;
     string name, specialization;
 
-    cout << "Enter the Doctor Name : ";
+    cout<<"Enter the Doctor Name : ";
     cin.ignore();
     getline(cin, name);
-    cout << "What are your Specialization ?\n";
+    cout<<"What are your Specialization ?\n";
     cin.ignore();
     getline(cin, specialization);
 
@@ -151,14 +151,14 @@ public:
       {
         dId += 1;
         doctors.emplace_back(dId, name, specialization);
-        cout << "Doctor is added successfully!\n";
+        cout<<"Doctor is added successfully!\n";
 
         return 0;
       }
     }
 
     doctors.emplace_back(dId, name, specialization);
-    cout << "Doctor is added successfully!\n";
+    cout<<"Doctor is added successfully!\n";
     return 0;
   }
 
@@ -168,11 +168,11 @@ public:
     int amount;
     string status;
     int pId;
-    cout << "Enter the patient's id : ";
+    cout<<"Enter the patient's id : ";
     cin >> pId;
-    cout << "enter the amount value : \n";
+    cout<<"enter the amount value : \n";
     cin >> amount;
-    cout << "Enter the status : \n";
+    cout<<"Enter the status : \n";
     cin.ignore();
     getline(cin, status);
     bool patientFound = false;
@@ -192,11 +192,11 @@ public:
 
       bId += 1;
       bills.emplace_back(bId, pId, amount, status, patients);
-      cout << "Bill is added successfully!\n";
+      cout<<"Bill is added successfully!\n";
     }
     else
     {
-      cout << "No patient found with this ID!\n";
+      cout<<"No patient found with this ID!\n";
     }
 
     return 0;
@@ -214,50 +214,50 @@ int main()
   int choice;
   do
   {
-    cout << "1. View Patients\n";
-    cout << "2. Add Patients\n";
-    cout << "3. View Doctors\n";
-    cout << "4. Add Doctors\n";
-    cout << "5. View Bill\n";
-    cout << "6. Add Bill\n";
-    cout << "7. Exit\n";
-    cout << "Enter a Number : ";
+    cout<<"1. View Patients\n";
+    cout<<"2. Add Patients\n";
+    cout<<"3. View Doctors\n";
+    cout<<"4. Add Doctors\n";
+    cout<<"5. View Bill\n";
+    cout<<"6. Add Bill\n";
+    cout<<"7. Exit\n";
+    cout<<"Enter a Number : ";
     cin >> choice;
 
     switch (choice)
     {
     case 1:
       system.viewPatients(patients);
-      cout << "===============================================================\n";
+      cout<<"===============================================================\n";
       break;
     case 2:
       system.addPatient(patients);
-      cout << "===============================================================\n";
+      cout<<"===============================================================\n";
       break;
     case 3:
       system.viewDoctors(doctors);
-      cout << "===============================================================\n";
+      cout<<"===============================================================\n";
       break;
     case 4:
       system.addDoctors(doctors);
-      cout << "===============================================================\n";
+      cout<<"===============================================================\n";
       break;
     case 5:
       system.viewBill(bills);
-      cout << "===============================================================\n";
+      cout<<"===============================================================\n";
       break;
     case 6:
       system.addBill(bills, patients);
-      cout << "===============================================================\n";
+      cout<<"===============================================================\n";
       break;
     case 7:
-      cout << "-------------- Thank You for the visit --------------";
+      cout<<"-------------- Thank You for the visit --------------";
       break;
 
     default:
-      cout << "Invalid Number\n";
-      cout << "---------TRY AGAIN---------\n";
-      cout << "===============================================================\n";
+      cout<<"Invalid Number\n";
+      cout<<"---------TRY AGAIN---------\n";
+      cout<<"===============================================================\n";
     }
   } while (choice != 7);
   return 0;
