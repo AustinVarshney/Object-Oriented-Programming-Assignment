@@ -32,6 +32,7 @@ public:
         cout << "Doctor Id : " << doctor_id << endl;
         cout << "Doctor Name : " << doctor_name << endl;
         cout << "Specialization : " << Specialization << endl;
+        cout << "NAme length : " << doctor_name.length();
     }
 };
 
