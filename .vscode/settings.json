@@ -59,6 +59,7 @@
   "files.associations": {
     "*.ejs": "html",
     "iostream": "cpp",
-    "iomanip": "cpp"
+    "iomanip": "cpp",
+    "ostream": "cpp"
   }
 }
