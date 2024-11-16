@@ -400,9 +400,12 @@ public:
 
 int main()
 {
-  vector<Patient> patients = {{1, "Ambani", 36, "Weight"}, {2, "Ramesh", 15, "Nothing"}};
-  vector<Doctor> doctors = {{1, "Mukesh", "MBBS"}};
-  vector<Bill> bills = {{1, 1, 200, "Paid", patients}};
+  vector<Patient> patients = {
+      Patient(1, "Ambani", 56, "Weight loss")};
+  vector<Doctor> doctors = {
+      Doctor(1, "Mukesh", "MBBS")};
+  vector<Bill> bills = {
+      Bill(1, 1, 200, "Paid", patients)};
   vector<Appointment> appointment;
   vector<Prescription> prescriptions;
 
