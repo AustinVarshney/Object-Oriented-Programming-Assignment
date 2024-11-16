@@ -298,6 +298,7 @@ public:
     static int bId = 1;
     int amount;
     string status;
+
     int pId;
     cout << "Enter the patient's id : ";
     cin >> pId;
