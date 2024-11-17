@@ -300,7 +300,7 @@ public:
     string status;
 
     int pId;
-    cout << "Enter the patient's id : ";
+    cout << "Enter the patient id : ";
     cin >> pId;
 
     cout << "enter the amount value : \n";
