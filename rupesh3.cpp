@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <cctype>
+#include <limits>
 using namespace std;
 
 class Patient
@@ -143,6 +145,19 @@ bool checkPatientId(vector<Patient> &patients, int id)
     return check;
 };
 
+// Function to check if a name is valid
+bool isValidName(const string &name)
+{
+    for (char c : name)
+    {
+        if (!isalpha(c) && !isspace(c))
+        { // Allow only letters and spaces
+            return false;
+        }
+    }
+    return !name.empty(); // for the name is not empty
+}
+
 class Management
 {
 public:
@@ -264,8 +279,21 @@ public:
         cin.ignore();
         getline(cin, name);
 
+        while (!isValidName(name))
+        {
+            cerr << "Error: Name should only contain letters and spaces, and cannot be empty.\n";
+            cout << "Enter a valid Patient Name: ";
+            getline(cin, name);
+        }
+
         cout << "Enter the age : ";
-        cin >> age;
+        while (!(cin >> age) || age <= 0)
+        {
+            cerr << "Error: Please enter a valid positive age.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Enter the age: ";
+        }
 
         cout << "What are your symptoms ?\n";
         cin.ignore();
@@ -296,6 +324,13 @@ public:
         cout << "Enter the Doctor Name : ";
         cin.ignore();
         getline(cin, name);
+
+        while (!isValidName(name))
+        {
+            cerr << "Error: Name should only contain letters and spaces, and cannot be empty.\n";
+            cout << "Enter a valid Doctor Name: ";
+            getline(cin, name);
+        }
 
         cout << "What are your Specialization ?\n";
         cin.ignore();
